@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit, Instrument_Sans } from "next/font/google";
 
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -36,6 +37,8 @@ export default function RootLayout({
         className={`${outfit.variable} ${instrumentSans.variable} antialiased`}
       >
         {children}
+
+        <Toaster />
       </body>
     </html>
   );

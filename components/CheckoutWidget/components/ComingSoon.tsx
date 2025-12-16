@@ -1,15 +1,40 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
 
 type Props = {
   placeholderText: string;
 };
-function ComingSoon({ placeholderText }: Props) {
-  const [email, setEmail] = useState("");
 
+const schema = z.object({
+  email: z.email("Enter valid email"),
+});
+
+function ComingSoon({ placeholderText }: Props) {
+  const {
+    watch,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: "",
+    },
+    resolver: zodResolver(schema),
+  });
   const onChange = (val: string) => {
-    setEmail(val);
+    setValue("email", val, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
+  const onSubmit = () => {
+    const email = getValues("email");
+    toast.success(`Email sent to ${email}`);
   };
 
   return (
@@ -28,14 +53,18 @@ function ComingSoon({ placeholderText }: Props) {
             type="email"
             placeholder="Enter your email"
             label="Email"
-            value={email}
+            value={watch("email")}
             onChange={(e) => onChange(e.target.value)}
+            error={!!errors.email}
+            errorText={errors.email?.message}
           />
         </div>
       </div>
       <Button
         size="lg"
         className="font-instrument rounded-full h-11 md:h-15 text-sm md:text-md font-bold w-full"
+        disabled={!watch("email") || !!errors.email}
+        onClick={onSubmit}
       >
         Update me
       </Button>
