@@ -19,7 +19,6 @@ function RecipientDetailsOne() {
     formState: { errors },
   } = formbag;
 
-  console.log({ errors });
   return (
     <div className="flex flex-col w-full h-full gap-6">
       <div className="w-full flex flex-col gap-2">

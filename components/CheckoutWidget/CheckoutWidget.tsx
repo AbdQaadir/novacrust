@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -66,7 +66,7 @@ function CheckoutWidget(): React.JSX.Element {
     mode: "onChange",
   });
 
-  const { watch, setValue, reset } = formBag;
+  const { watch, setValue, getValues, reset } = formBag;
   const paymentMethod = watch("paymentMethod");
 
   const handleChangeMethod = (id: PAYMENT_METHODS_ENUM) => {
@@ -76,9 +76,24 @@ function CheckoutWidget(): React.JSX.Element {
     setValue("paymentMethod", id);
   };
 
+  const currentStep = watch("step");
   const currStepDetails = PAYMENT_STEPS.find(
     (_step) => _step.id === watch("step")
   );
+  const stepTitle = useMemo(() => {
+    if (currentStep === PAYMENT_STEPS_ENUM.PAYMENT_SUCCESS) {
+      return "";
+    }
+
+    if (currentStep === PAYMENT_STEPS_ENUM.PAYMENT_REVIEW) {
+      const { payAmount, payFromCurrency } = getValues();
+
+      const [asset, network] = payFromCurrency.toUpperCase().split("-");
+      return currStepDetails?.title.replace("[asset]", asset);
+    }
+
+    return currStepDetails?.title;
+  }, [currentStep]);
 
   const onGoBack = () => {
     const lastStepIndex = PAYMENT_STEPS.findIndex(
@@ -97,16 +112,18 @@ function CheckoutWidget(): React.JSX.Element {
               activeMethod={paymentMethod}
               onMethodChange={handleChangeMethod}
             />
-          ) : (
+          ) : stepTitle ? (
             <div className="w-full flex flex-row items-center">
               <Button onClick={onGoBack} variant="ghost">
                 <ArrowLeft />
               </Button>
 
               <h2 className="flex-1 text-center -ml-4 font-medium text-xl">
-                {currStepDetails?.title}
+                {stepTitle}
               </h2>
             </div>
+          ) : (
+            <></>
           )}
         </div>
 

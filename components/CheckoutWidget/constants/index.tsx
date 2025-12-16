@@ -182,6 +182,8 @@ export enum PAYMENT_STEPS_ENUM {
   PAYMENT_STEP = "payment-step",
   PAYMENT_DETAILS_ONE = "payment-details-one",
   PAYMENT_DETAILS_TWO = "payment-details-two",
+  PAYMENT_REVIEW = "payment-review",
+  PAYMENT_SUCCESS = "payment-success",
 }
 
 export const PAYMENT_STEPS = [
@@ -196,5 +198,13 @@ export const PAYMENT_STEPS = [
   {
     id: PAYMENT_STEPS_ENUM.PAYMENT_DETAILS_TWO,
     title: "Recipient Details",
+  },
+  {
+    id: PAYMENT_STEPS_ENUM.PAYMENT_REVIEW,
+    title: "Send [asset] to the address below",
+  },
+  {
+    id: PAYMENT_STEPS_ENUM.PAYMENT_SUCCESS,
+    title: "Payment Successful",
   },
 ];
